@@ -9,46 +9,63 @@
   <body>
     <main class="app" data-testid="todo-app">
       <aside class="sidebar" data-testid="todo-sidebar">
-        <h2>Categories</h2>
+        <div class="sidebar-header">
+          <h2>Categories</h2>
+          <button
+            type="button"
+            class="category-menu-toggle"
+            data-testid="todo-category-menu-toggle"
+            aria-controls="todo-category-menu"
+            aria-expanded="true"
+            aria-label="Toggle categories"
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
 
-        <nav class="category-nav" id="todo-category-nav" aria-label="Category menu" data-testid="todo-category-nav"></nav>
+        <div id="todo-category-menu" class="category-menu" data-testid="todo-category-menu">
+          <nav class="category-nav" id="todo-category-nav" aria-label="Category menu" data-testid="todo-category-nav"></nav>
 
-        <form id="category-form" class="category-form" data-testid="todo-category-form">
-          <label class="sr-only" for="category-input">Create a category</label>
-          <input
-            id="category-input"
-            name="categoryName"
-            type="text"
-            placeholder="New category"
-            autocomplete="off"
-            data-testid="todo-category-input"
-          />
-          <button type="submit" data-testid="todo-category-submit">Add Category</button>
-        </form>
+          <form id="category-form" class="category-form" data-testid="todo-category-form">
+            <label class="sr-only" for="category-input">New category</label>
+            <input
+              id="category-input"
+              name="categoryName"
+              type="text"
+              placeholder="New category"
+              autocomplete="off"
+              data-testid="todo-category-input"
+            />
+            <button type="submit" aria-label="Add category" data-testid="todo-category-submit">+</button>
+          </form>
 
-        <button type="button" id="delete-category-button" class="delete-category-button" data-testid="todo-delete-category-button">
-          Delete category
-        </button>
+          <button type="button" id="delete-category-button" class="delete-category-button" data-testid="todo-delete-category-button">
+            Delete category
+          </button>
+        </div>
       </aside>
 
       <section class="main-panel" data-testid="todo-main-panel">
-        <h1>ToDo List</h1>
+        <h1 id="todo-heading" data-testid="todo-heading">All tasks</h1>
 
         <div class="task-summary" data-testid="todo-task-summary">
           <div class="task-summary-row">
             <span data-testid="todo-tasks-left-count">Tasks left: 0</span>
+            <span class="summary-separator" aria-hidden="true">•</span>
             <span data-testid="todo-tasks-done-count">Done: 0</span>
           </div>
 
+          <p class="progress-label" data-testid="todo-progress-label">0%</p>
           <div class="progress-bar" data-testid="todo-progress-bar" aria-label="Task progress">
             <span id="todo-progress-fill" class="progress-fill" data-testid="todo-progress-fill"></span>
           </div>
 
-          <p class="progress-label" data-testid="todo-progress-label">0% left to complete</p>
           <p class="progress-detail" data-testid="todo-progress-detail">0 of 0 tasks completed</p>
         </div>
 
-        <form id="todo-form" class="todo-form" data-testid="todo-form">
+        <form id="todo-form" class="todo-form task-entry-section" data-testid="todo-form">
           <label class="sr-only" for="todo-input">Add a task</label>
           <input
             id="todo-input"
@@ -59,23 +76,28 @@
             data-testid="todo-input"
           />
 
-          <div class="task-selectors">
-            <div class="field-group">
-              <label for="todo-priority">Priority</label>
+          <div class="task-options-row">
+            <div class="task-selectors">
               <select id="todo-priority" name="priority" data-testid="todo-priority">
+                <option value="" selected disabled>Select priority</option>
                 <option value="high">High</option>
-                <option value="medium" selected>Medium</option>
+                <option value="medium">Medium</option>
                 <option value="low">Low</option>
               </select>
-            </div>
 
-            <div class="field-group">
-              <label for="todo-category">Category</label>
               <select id="todo-category" name="category" data-testid="todo-category"></select>
             </div>
+
+            <button type="submit" aria-label="Add task" data-testid="todo-submit-button">+</button>
           </div>
 
-          <button type="submit" data-testid="todo-submit-button">Add Task</button>
+          <p
+            id="todo-validation-message"
+            class="validation-message"
+            data-testid="todo-validation-message"
+            aria-live="polite"
+            hidden
+          ></p>
         </form>
 
         <div class="todo-filters" aria-label="Filter tasks by status" data-testid="todo-filters">
@@ -89,14 +111,6 @@
             Completed
           </button>
         </div>
-
-        <p
-          id="todo-validation-message"
-          class="validation-message"
-          data-testid="todo-validation-message"
-          aria-live="polite"
-          hidden
-        ></p>
 
         <ul id="todo-list" class="todo-list" aria-live="polite" data-testid="todo-list"></ul>
       </section>

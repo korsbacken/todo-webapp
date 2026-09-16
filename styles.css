@@ -21,11 +21,12 @@ body {
   margin: 0;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: var(--bg);
   font-family: Arial, Helvetica, sans-serif;
   color: var(--primary);
+  padding: 24px;
 }
 
 button,
@@ -36,7 +37,7 @@ select {
 
 .app {
   width: min(95vw, 1100px);
-  min-height: 70vh;
+  min-height: calc(100vh - 48px);
   display: flex;
   align-items: stretch;
   gap: 24px;
@@ -55,10 +56,39 @@ select {
   flex-direction: column;
 }
 
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .sidebar h2 {
   margin-top: 0;
   margin-bottom: 14px;
   font-size: 1.2rem;
+}
+
+.category-menu-toggle {
+  display: none;
+  width: 40px;
+  height: 36px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.category-menu-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--primary);
 }
 
 .category-nav {
@@ -86,8 +116,8 @@ select {
 }
 
 .category-form {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
   margin-top: auto;
 }
@@ -115,6 +145,16 @@ select {
   cursor: pointer;
 }
 
+.category-form button,
+.todo-form > button,
+.task-options-row > button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
 .main-panel {
   flex: 1;
   min-width: 0;
@@ -136,11 +176,15 @@ h1 {
 
 .task-summary-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 12px;
   font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.summary-separator {
   color: var(--muted);
 }
 
@@ -168,6 +212,14 @@ h1 {
   font-size: 0.9rem;
 }
 
+.progress-label {
+  margin-bottom: 6px;
+  color: var(--primary);
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 0.95;
+}
+
 .progress-detail {
   margin-top: 6px;
 }
@@ -179,9 +231,33 @@ h1 {
   margin-bottom: 12px;
 }
 
+.task-entry-section {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+}
+
 .task-selectors {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex: 1;
+  gap: 12px;
+}
+
+.task-selectors select {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--primary);
+}
+
+.task-options-row {
+  display: flex;
+  align-items: center;
   gap: 12px;
 }
 
@@ -245,7 +321,7 @@ h1 {
 
 .validation-message {
   min-height: 20px;
-  margin: 0 0 16px;
+  margin: 0;
   color: var(--danger);
   font-size: 0.9rem;
 }
@@ -495,6 +571,7 @@ h1 {
     flex-direction: column;
     width: min(92vw, 760px);
     padding: 20px;
+    min-height: calc(100vh - 48px);
   }
 
   .sidebar {
@@ -503,6 +580,18 @@ h1 {
     border-bottom: 1px solid var(--border);
     padding-right: 0;
     padding-bottom: 18px;
+  }
+
+  .category-menu-toggle {
+    display: inline-flex;
+  }
+
+  .category-menu[hidden] {
+    display: none;
+  }
+
+  .category-menu {
+    margin-top: 14px;
   }
 
   .task-selectors {
@@ -519,6 +608,19 @@ h1 {
   .app {
     width: min(94vw, 100%);
     padding: 16px;
+    min-height: calc(100vh - 36px);
+  }
+
+  .progress-label {
+    font-size: 3.5rem;
+  }
+
+  .task-selectors {
+    gap: 8px;
+  }
+
+  .task-options-row {
+    gap: 8px;
   }
 
   .todo-item {

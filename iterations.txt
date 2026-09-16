@@ -1,0 +1,15 @@
+Next iteration:
+
+Change header "ToDo List" to the current highlighted category name and place the "tasks left" and "done" text underneath, inline seperated with a bullet point/dot.
+
+Remove "left to complete"-text and move the N% above the progress bar and increase the size something like 400%.
+
+Move upp the "new category"-functionality underneath the categories. Replace the add category-button with a plus sign button and place it next to new category text field.
+
+The category section should be placed in a sidebar menu when neccessary, when the screen size is too small to display it on the side.
+
+Group the add task-section in one visual section. Replace the Add Task-button with a plus sign.
+
+Remove the "headers" for both dropdowns. The dropdowns should have non selectable placeholders as first options in the list. Category and Priority. 
+
+

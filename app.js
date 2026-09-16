@@ -12,6 +12,9 @@ const categoryInput = document.getElementById('category-input');
 const categoryNav = document.getElementById('todo-category-nav');
 const filterButtons = document.querySelectorAll('[data-filter]');
 const deleteCategoryButton = document.getElementById('delete-category-button');
+const todoHeading = document.getElementById('todo-heading');
+const categoryMenuToggle = document.querySelector('[data-testid="todo-category-menu-toggle"]');
+const categoryMenu = document.getElementById('todo-category-menu');
 const expandedTaskIds = new Set();
 
 let tasks = loadTasks();
@@ -136,13 +139,8 @@ function renderCategoryOptions() {
     .map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
     .join('');
 
-  todoCategory.innerHTML = options;
-
-  if (categories.includes('Today')) {
-    todoCategory.value = 'Today';
-  } else {
-    todoCategory.value = categories[0] || 'Today';
-  }
+  todoCategory.innerHTML = `<option value="" selected disabled>Select category</option>${options}`;
+  todoCategory.value = '';
 }
 
 function renderCategoryButtons() {
@@ -172,15 +170,19 @@ function renderCategoryButtons() {
 }
 
 function updateCategorySummary() {
-  const { total, completed, left, percentLeft } = getCategoryProgress();
+  const { total, completed, left, percentCompleted } = getCategoryProgress();
   const progressFill = document.getElementById('todo-progress-fill');
   const tasksLeftCount = document.querySelector('[data-testid="todo-tasks-left-count"]');
   const tasksDoneCount = document.querySelector('[data-testid="todo-tasks-done-count"]');
   const progressLabel = document.querySelector('[data-testid="todo-progress-label"]');
   const progressDetail = document.querySelector('[data-testid="todo-progress-detail"]');
 
+  if (todoHeading) {
+    todoHeading.textContent = currentCategory === 'all' ? 'All tasks' : currentCategory;
+  }
+
   if (progressFill) {
-    progressFill.style.width = `${Math.min(percentLeft, 100)}%`;
+    progressFill.style.width = `${Math.min(percentCompleted, 100)}%`;
   }
 
   if (tasksLeftCount) {
@@ -192,7 +194,7 @@ function updateCategorySummary() {
   }
 
   if (progressLabel) {
-    progressLabel.textContent = `${Math.round(percentLeft)}% left to complete`;
+    progressLabel.textContent = `${Math.round(percentCompleted)}%`;
   }
 
   if (progressDetail) {
@@ -205,9 +207,9 @@ function getCategoryProgress() {
   const total = categoryTasks.length;
   const completed = categoryTasks.filter((task) => task.completed).length;
   const left = total - completed;
-  const percentLeft = total === 0 ? 0 : (left / total) * 100;
+  const percentCompleted = total === 0 ? 0 : (completed / total) * 100;
 
-  return { total, completed, left, percentLeft };
+  return { total, completed, left, percentCompleted };
 }
 
 function renderTasks() {
@@ -225,7 +227,7 @@ function renderTasks() {
     }
 
     if (currentCategory !== 'all') {
-      emptyMessage = `No tasks in the ${currentCategory} category.`;
+      emptyMessage = 'No tasks in this category.';
     }
 
     todoList.innerHTML = `<li class="empty-state" data-testid="todo-empty-state">${emptyMessage}</li>`;
@@ -388,11 +390,16 @@ function renderTasks() {
 
 function addTask(text, priority, category) {
   const trimmedText = text.trim();
-  const normalizedPriority = priority || 'medium';
-  const normalizedCategory = category || 'Today';
+  const normalizedPriority = priority;
+  const normalizedCategory = category;
 
   if (!trimmedText) {
     showValidation('Please enter a task before adding it.');
+    return;
+  }
+
+  if (!normalizedPriority || !normalizedCategory) {
+    showValidation('Please select a priority and category.');
     return;
   }
 
@@ -608,7 +615,7 @@ todoForm.addEventListener('submit', (event) => {
   event.preventDefault();
   addTask(todoInput.value, todoPriority.value, todoCategory.value);
   todoInput.value = '';
-  todoPriority.value = 'medium';
+  todoPriority.value = '';
   renderCategoryOptions();
   todoInput.focus();
 });
@@ -616,6 +623,12 @@ todoForm.addEventListener('submit', (event) => {
 categoryForm.addEventListener('submit', (event) => {
   event.preventDefault();
   addCategory(categoryInput.value);
+});
+
+categoryMenuToggle.addEventListener('click', () => {
+  const isExpanded = categoryMenuToggle.getAttribute('aria-expanded') === 'true';
+  categoryMenuToggle.setAttribute('aria-expanded', String(!isExpanded));
+  categoryMenu.hidden = isExpanded;
 });
 
 deleteCategoryButton.addEventListener('click', () => {
